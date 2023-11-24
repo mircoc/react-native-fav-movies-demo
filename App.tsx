@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  StatusBar,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
+import { FavMoviesProvider } from "./state";
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import Navigation from "./components/Navigation";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <FavMoviesProvider>
+      <SafeAreaView style={styles.container}>
+        <Navigation />
+        <ExpoStatusBar />
+      </SafeAreaView>
+    </FavMoviesProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: StatusBar.currentHeight || 0,
   },
 });
