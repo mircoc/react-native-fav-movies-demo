@@ -1,4 +1,5 @@
-import { FavMovieState, FavMovieAction, ActionTypes } from "./favmovie.types";
+import { Movie } from "./api.types";
+import { FavMovieState, FavMovieAction, ActionTypes, MovieId } from "./favmovie.types";
 
 export const favMovieReducer = (state: FavMovieState, action: FavMovieAction): FavMovieState => {
     switch (action.type) {
@@ -11,13 +12,33 @@ export const favMovieReducer = (state: FavMovieState, action: FavMovieAction): F
                 }
             };
         case ActionTypes.LOAD_MOVIES_SUCCESS:
+            // unique movie 
+            const newMoviesData = action.payload.data.reduce(
+                (acc, movie) => {
+                    const id = movie.id;
+                    acc[id] = movie;
+                    return acc;
+                },
+                state.movies.data
+            );
             return {
                 ...state,
                 movies: {
+                    ...state.movies,
                     loading: false,
                     loaded: true,
                     error: false,
-                    data: [ ...state.movies.data, ...action.payload],
+                    data: newMoviesData,
+                    lastPageLoaded: action.payload.page,
+                    morePagesAvailable: action.payload.morePages,
+                }
+            };
+        case ActionTypes.SET_MOVIES_PAGE:
+            return {
+                ...state,
+                movies: {
+                    ...state.movies,
+                    pageRequested: action.payload,
                 }
             };
         case ActionTypes.LOAD_MOVIES_FAILURE:

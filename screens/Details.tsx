@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useFavMoviesContext } from "../state";
 import {
   addToFavorites,
-  loadInitialFavorites,
-  loadMovies,
   removeFromFavorites,
 } from "../state/actions";
-import MoviesList from "../components/MoviesList";
-import { Movie } from "../state/api.types";
-import { View } from "../components/Themed";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import {
   MovieInfoScreenNavigationProp,
@@ -24,7 +19,7 @@ export default function DetailsScreen() {
   const navigation = useNavigation<MovieInfoScreenNavigationProp>();
 
   const movieId = route?.params?.movieId || -1;
-  const movie = state.movies.data.find((movie: Movie) => movie.id === movieId);
+  const movie = state.movies.data[movieId];
   if (!movie) {
     return <ErrorFullScreen message="Movie not found" />;
   }

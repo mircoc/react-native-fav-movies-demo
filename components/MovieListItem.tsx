@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Text } from "./Themed";
-import { useFavMoviesContext } from "../state";
-import { loadInitialFavorites, loadMovies } from "../state/actions";
-import { ActivityIndicator, FlatList, StyleSheet, Image } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import { MovieId } from "../state/favmovie.types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
