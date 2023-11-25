@@ -5,7 +5,9 @@ import { favMovieReducer } from "./reducer";
 
 const initialState: FavMovieState = {
     movies: {
-        data: [],
+        // lastPageLoaded: 444,  // last is 449 for testing ...
+        pageRequested: 1,
+        data: {},
         loaded: false,
         loading: false,
         error: false,

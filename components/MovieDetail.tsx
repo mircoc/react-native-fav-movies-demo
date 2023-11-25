@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, ImageBackground, StyleSheet } from "react-native";
+import { Image, ImageBackground, ScrollView, StyleSheet } from "react-native";
 import { View, Text } from "../components/Themed";
 import { MovieId } from "../state/favmovie.types";
 import { IMAGE_URI_PREFIX } from "../state/api.conf";
@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    height: 300,
   },
   title: {
     color: "#fff",
@@ -28,16 +27,14 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    flex: 1,
     justifyContent: "flex-end",
     padding: 20,
+    minHeight: 300,
   },
   text: {
     padding: 20,
     fontSize: 22,
     color: "#000",
-    backgroundColor: "#fff",
-    flex: 1,
   },
 });
 
@@ -47,7 +44,7 @@ export default function MovieDetail({
   overview,
 }: MovieListItemProps) {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageBackground
           source={{ uri: `${IMAGE_URI_PREFIX}${backdropImageUrl}` }}
@@ -56,7 +53,10 @@ export default function MovieDetail({
           <Text style={styles.title}>{title}</Text>
         </ImageBackground>
       </View>
-      <Text style={styles.text}>{overview}</Text>
-    </View>
+
+      <Text style={styles.text}>
+        {overview}
+      </Text>
+    </ScrollView>
   );
 }

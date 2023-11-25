@@ -10,16 +10,18 @@ import { MovieList } from "./api.types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { THEMOVIEDB_APIKEY } from "./api.conf";
 
-
 const LOCALSTORAGE_FAV_KEY = "favmovies";
 
-export async function loadMovies(
+export async function loadMoviesPage(
   dispatch: React.Dispatch<FavMovieAction>,
-  state: FavMovieState
+  state: FavMovieState,
+  nextPage: MoviesListPage
 ) {
-  const nextPage = state.movies.lastPageLoaded
-    ? state.movies.lastPageLoaded + 1
-    : 1;
+  if (state.movies.morePagesAvailable === false) {
+    // we know that data pagination is finished
+    console.log("no more pages available...");
+    return;
+  }
   dispatch({ type: ActionTypes.LOAD_MOVIES_REQUEST });
   const getMovies = async (page: MoviesListPage) => {
     const genericError = "[getMovies] Generic error from remote endpoint";
@@ -30,7 +32,11 @@ export async function loadMovies(
       if (response.status == 200) {
         dispatch({
           type: ActionTypes.LOAD_MOVIES_SUCCESS,
-          payload: response.data.results,
+          payload: {
+            data: response.data.results,
+            page: response.data.page,
+            morePages: response.data.page <= response.data.total_pages,
+          },
         });
         return;
       }
@@ -53,6 +59,14 @@ export async function loadMovies(
   };
 
   getMovies(nextPage);
+}
+
+export async function loadNextPage(
+  dispatch: React.Dispatch<FavMovieAction>,
+  state: FavMovieState
+) {
+  const currentPage = state.movies.lastPageLoaded || 0;
+  dispatch({ type: ActionTypes.SET_MOVIES_PAGE, payload: currentPage + 1 });
 }
 
 export async function loadInitialFavorites(
@@ -86,19 +100,18 @@ export async function addToFavorites(
 }
 
 export async function removeFromFavorites(
-    dispatch: React.Dispatch<FavMovieAction>,
-    state: FavMovieState,
-    movieId: MovieId
-  ) {
-    try {
-      const favorites: MovieId[] = state.favorites.loaded
-        ? state.favorites.data.filter(id => id !== movieId)
-        : [];
-      await AsyncStorage.setItem(LOCALSTORAGE_FAV_KEY, JSON.stringify(favorites));
-  
-      dispatch({ type: ActionTypes.REMOVE_FROM_FAVORITES, payload: movieId });
-    } catch (err) {
-      console.error(err);
-    }
+  dispatch: React.Dispatch<FavMovieAction>,
+  state: FavMovieState,
+  movieId: MovieId
+) {
+  try {
+    const favorites: MovieId[] = state.favorites.loaded
+      ? state.favorites.data.filter((id) => id !== movieId)
+      : [];
+    await AsyncStorage.setItem(LOCALSTORAGE_FAV_KEY, JSON.stringify(favorites));
+
+    dispatch({ type: ActionTypes.REMOVE_FROM_FAVORITES, payload: movieId });
+  } catch (err) {
+    console.error(err);
   }
-  
+}

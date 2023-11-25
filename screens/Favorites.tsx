@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useFavMoviesContext } from "../state";
-import { loadInitialFavorites, loadMovies } from "../state/actions";
 import MoviesList from "../components/MoviesList";
 import { Movie } from "../state/api.types";
 
@@ -13,7 +12,7 @@ export default function FavoritesScreen() {
       const movieToLoad = [];
       const loadedFavorites = state.favorites.data
         .map((favId) => {
-          const movie = state.movies.data.find((movie) => movie.id === favId);
+          const movie = state.movies.data[favId];
           if (movie) {
             return movie;
           }
