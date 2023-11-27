@@ -20,9 +20,6 @@ export default function DetailsScreen() {
 
   const movieId = route?.params?.movieId || -1;
   const movie = state.movies.data[movieId];
-  if (!movie) {
-    return <ErrorFullScreen message="Movie not found" />;
-  }
   const isFavorited = state.favorites.data.indexOf(movieId) !== -1;
 
   useEffect(() => {
@@ -43,6 +40,10 @@ export default function DetailsScreen() {
     });
   }, [isFavorited, movieId]);
 
+  if (!movie) {
+    return <ErrorFullScreen message="Movie not found" />;
+  }
+  
   return (
     <MovieDetail
       backdropImageUrl={movie.backdrop_path}
