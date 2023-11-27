@@ -11,6 +11,7 @@ const initialState: FavMovieState = {
         loaded: false,
         loading: false,
         error: false,
+        dataOrder: [],
     },
     favorites: {
         data: [],

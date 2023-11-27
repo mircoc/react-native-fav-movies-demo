@@ -9,6 +9,7 @@ export type MoviesListPage = number;
 export type FavMovieState = {
   movies: {
     data: { [key: MovieId]: Movie };
+    dataOrder: MovieId[];
     loaded: boolean;
     loading: boolean;
     error: boolean;

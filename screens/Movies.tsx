@@ -23,7 +23,7 @@ export default function MoviesScreen() {
 
   return (
     <MoviesList
-      data={Object.values(state.movies.data)}
+      data={state.movies.dataOrder.map((movieId) => state.movies.data[movieId])}
       error={state.movies.error}
       loaded={state.movies.loaded}
       errorText={state.movies.lastErrorMessage}

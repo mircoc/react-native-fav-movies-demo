@@ -12,15 +12,6 @@ export const favMovieReducer = (state: FavMovieState, action: FavMovieAction): F
                 }
             };
         case ActionTypes.LOAD_MOVIES_SUCCESS:
-            // unique movie 
-            const newMoviesData = action.payload.data.reduce(
-                (acc, movie) => {
-                    const id = movie.id;
-                    acc[id] = movie;
-                    return acc;
-                },
-                state.movies.data
-            );
             return {
                 ...state,
                 movies: {
@@ -28,7 +19,15 @@ export const favMovieReducer = (state: FavMovieState, action: FavMovieAction): F
                     loading: false,
                     loaded: true,
                     error: false,
-                    data: newMoviesData,
+                    data: action.payload.data.reduce(
+                        (acc, movie) => {
+                            const id = movie.id;
+                            acc[id] = movie;
+                            return acc;
+                        },
+                        state.movies.data
+                    ),
+                    dataOrder: [ ...state.movies.dataOrder, ...action.payload.data.filter(movie => state.movies.dataOrder.indexOf(movie.id) === -1).map(movie => movie.id)],
                     lastPageLoaded: action.payload.page,
                     morePagesAvailable: action.payload.morePages,
                 }
